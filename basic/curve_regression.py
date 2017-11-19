@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import sklearn.preprocessing as preprocessing
 
 
-EPOCH = 500000
+EPOCH = 5000
 
 data_x = np.linspace(-2, 2, 100)
 noise = np.random.normal(0, 0.12, 100)
@@ -45,7 +45,7 @@ def train(lr):
     global train_x, W1, W2, B1, B2
     for step in range(EPOCH):
         layer1, pred_y = net(train_x)
-        loss = np.sum(np.square(pred_y - train_y) / 2)
+        loss = np.mean(np.square(pred_y - train_y) / 2)
         error_out = pred_y - train_y
 
         # 训练输出层权重
@@ -64,7 +64,7 @@ def train(lr):
         W1 = W1 - delta_w1
         B1 = B1 - delta_b1
 
-        if step % 1000 == 0:
+        if step % 10 == 0:
             print('loss =', loss)
             plt.cla()
             plt.scatter(train_x, train_y)
@@ -72,10 +72,13 @@ def train(lr):
             plt.pause(0.001)
 
 
-train(0.00198)
+train(0.012)
 
 _, pred_y = net(train_x)
 
 
 plt.ioff()
 
+plt.scatter(train_x, train_y)
+plt.plot(train_x, pred_y, 'r-', lw=5)
+plt.show()
