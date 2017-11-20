@@ -1,10 +1,10 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sklearn.preprocessing as preprocessing
+# import sklearn.preprocessing as preprocessing
 
 
-EPOCH = 5000
+EPOCH = 2000
 
 data_x = np.linspace(-2, 2, 100)
 noise = np.random.normal(0, 0.12, 100)
@@ -21,11 +21,11 @@ def diff_sigmoid(y):
     return y * (1 - y)
 
 # 1x10
-W1 = np.zeros([1, 10]) + 0.1
+W1 = np.random.uniform(0, 1, [1, 10])
 # 1x1
 B1 = np.zeros([1, 1]) + 0.1
 # 10x1
-W2 = np.zeros([10, 1]) + 0.1
+W2 = np.random.uniform(0, 1, [10, 1])
 # 1x1
 B2 = np.zeros([1, 1]) + 0.1
 
@@ -49,13 +49,18 @@ def train(lr):
         error_out = pred_y - train_y
 
         # 训练输出层权重
-        delta_w2 = lr * np.dot(layer1.T, error_out)
+        # layer1 = [100x10], layer1.T = [10x100]
+        # error_out = [100x1]
+        # delta_w2 = layert.T * error_out = [10x1]
+        delta_w2 = lr * np.matmul(layer1.T, error_out)
         delta_b2 = lr * np.sum(error_out)
 
         # 训练隐藏层权重
-        error_layer1 = np.dot(error_out, W2.T)
+        # W2 = [10x1], W2.T = [1x10]
+        # error_layer1 = error_out * W2.T = [100x10]
+        error_layer1 = np.matmul(error_out, W2.T)
         error_sigmoid = error_layer1 * diff_sigmoid(layer1)
-        delta_w1 = lr * np.dot(train_x.T, error_sigmoid)
+        delta_w1 = lr * np.matmul(train_x.T, error_sigmoid)
         delta_b1 = lr * np.sum(error_sigmoid)
 
         # Update Weights and Biases
@@ -64,7 +69,7 @@ def train(lr):
         W1 = W1 - delta_w1
         B1 = B1 - delta_b1
 
-        if step % 10 == 0:
+        if step % 5 == 0:
             print('loss =', loss)
             plt.cla()
             plt.scatter(train_x, train_y)
@@ -72,7 +77,7 @@ def train(lr):
             plt.pause(0.001)
 
 
-train(0.012)
+train(0.0012)
 
 _, pred_y = net(train_x)
 
