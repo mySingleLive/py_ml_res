@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 EPOCH = 2000
 
 data_x = np.linspace(-2, 2, 100)
-# [100] -> [100x1]
-train_x = data_x[:,None]
 
 noise = np.random.normal(0, 0.52, 100)
 data_y = 2.3 * np.square(data_x) - 1.2 + noise
-train_y = data_y[:,None]
+
+# [100] -> [100x1]
+train_x = np.reshape(data_x, [100, 1])
+train_y = np.reshape(data_y, [100, 1])
 
 
 W1 = np.random.uniform(0, 2, [1, 10])
